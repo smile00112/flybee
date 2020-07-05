@@ -89,8 +89,11 @@
         <br />
         <label for="zakaz-date" class="bs-labe-zakaz">Курьер</label>
         <br />
-        <select class="bs-input-zakaz">
-          <option v-for="courier in couriers" :key="courier.name">{{ courier.name }}</option>
+        <select v-model="confirm.courier" class="bs-input-zakaz">
+          <option v-for="courier in couriers" 
+          v-bind:key="courier.id" 
+          :value="courier.id"
+           >{{ courier.name }}</option>
         </select>
         <br />
         <label for="zakaz-dop" class="bs-labe-zakaz">Комментарий</label>
@@ -189,20 +192,21 @@ export default {
 
     await this.getOrderStatuses();  
     this.orderStatus = this.statuses.filter(i => i.delivery_id == this.$route.params.id)[0];
-    
-    //console.error(this.order);
-    //console.error(this.orderStatus);
 
     if( ['4', '8'].includes(this.order.status) ){
+
         this.confirm.name = this.orderStatus.name;
         this.confirm.comment = this.orderStatus.comment;
         this.confirm.courier = this.orderStatus.courier_id;
         this.confirm.summ = this.orderStatus.summ;
         this.confirm.date = this.orderStatus.date;
+
         if(this.confirm.date){
           this.datetime.date = this.confirm.date.split(' ')[0];
           this.datetime.time = this.confirm.date.split(' ')[1];
         }
+
+        //Скрываем кропки, если заказ в истории
         this.actionButtons.show = false;
     }
   },

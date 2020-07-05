@@ -15,7 +15,7 @@ export default new Vuex.Store({
     news: [],
     history: [],
     couriers: [
-      {id:1, name: 'Нет' },
+      {id:0, name: 'Нет' },
       {id:1, name: 'Курьер 1' },
       {id:2, name: 'Курьер 2' }, 
       {id:3, name: 'Курьер 3' }
