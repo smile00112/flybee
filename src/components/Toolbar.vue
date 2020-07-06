@@ -21,6 +21,15 @@
             >История</a>
             <!--Класс active должен применяться к активной ссылке-->
           </li>
+          <li class="nav-item">
+            <a
+              :class="{active: $route.path == '/couriers'}"
+              class="nav-link bs-a-ul-zak"
+              href="/couriers"
+              @click.prevent="$router.push('/couriers')"
+            >Курьеры</a>
+            <!--Класс active должен применяться к активной ссылке-->
+          </li>
         </ul>
       </div>
       <div style="margin-top: 70px;">

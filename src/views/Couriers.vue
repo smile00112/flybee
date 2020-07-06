@@ -29,13 +29,13 @@
       filtredOrders: []
     }),
     methods: {
-      ...mapActions(["getAllOrders"]),
+      ...mapActions(["getCouriers"]),
       getImg(status) {
         let img;
-        if (status == "1") img = "white.png";
+        if (status == "1") img = "green.png";
         if (status == "2") img = "yellow.png";
-        if (status == "4") img = "green.png";
-        if (status == "8") img = "red.png";
+        if (status == "4") img = "white.png";
+        if (status == "0") img = "red.png";
         return require(`@/assets/image/${img}`);
       },
       getLink(orderId) {
@@ -55,19 +55,17 @@
       },
       search(val) {
         this.filtredOrders = this.news.filter(i => {
-        console.log(i);
           return (
             i.fromAddress.indexOf(val) + 1 ||
             i.fromName.indexOf(val) + 1 ||
             i.toAddress.indexOf(val) + 1 ||
-            i.toName.indexOf(val) + 1 ||
-            i.orderId.indexOf(val) + 1 
+            i.toName.indexOf(val) + 1
           );
         });
       }
     },
     async mounted() {
-      await this.getAllOrders();
+      await this.getCouriers();
       this.filtredOrders = this.news;
     }
   };

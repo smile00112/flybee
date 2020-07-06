@@ -52,7 +52,6 @@ export default new Vuex.Store({
       try {
         const response = await axios.post(url + 'api/private/getstatus')
         if (response.status == 200) {
-          //console.log(response.data) 
           commit('setOrdersStatuses', response.data)
         }
       } catch (error) { console.log(error) }
@@ -70,6 +69,7 @@ export default new Vuex.Store({
         const response = await axios.post(url + 'api/private/couriers')
         if (response.status == 200) {
           this.couriers = response.data
+          console.warn(this.couriers);
         }
       } catch (error) { console.log(error) }
     },
