@@ -4,14 +4,14 @@
     <!--white.png новыз заказ-->
     <!--yellow.png заказ в работе-->
     <div style="margin: 10% 0% 2% 0%;">
-      <div v-for="order in filtredOrders" :key="order.orderId" class="bs-list-zak">
+      <div v-for="courier in filtredCouriers" :key="courier.id" class="bs-list-zak">
         <div style="display: flex; margin-bottom: 2%">
           <div class="bs-nomer-zak">
-            <a :href="getLink(order.orderId)" @click.prevent="$router.push(getLink(order.orderId))">
-              <p class="bs-p-zak">№ {{ order.orderId }}</p>
+            <a :href="getLink(courier.id)" @click.prevent="$router.push(getLink(courier.id))">
+              <p class="bs-p-zak">№ {{ courier.id }}</p>
             </a>
           </div>
-          <img class="bs-left-zak" :src="getImg(order.status)" />
+          <img class="bs-left-zak" :src="getImg(courier.status)" />
         </div>
       </div>
     </div>
@@ -39,34 +39,31 @@
         return require(`@/assets/image/${img}`);
       },
       getLink(orderId) {
-        return `/info/${orderId}`;
+        return `/courier/${orderId}`;
       },
-      filter({ checkboxes, date }) {
-        if (checkboxes.length > 0) {
-          this.filtredOrders = this.filtredOrders.filter(i =>
-            checkboxes.includes(i.status)
-          );
-        }
-        if (date) {
-          this.filtredOrders = this.filtredOrders.filter(
-            i => date == i.takeDate.split(" ")[0]
-          );
-        }
-      },
+      // filter({ checkboxes, date }) {
+      //   if (checkboxes.length > 0) {
+      //     this.filtredOrders = this.filtredOrders.filter(i =>
+      //       checkboxes.includes(i.status)
+      //     );
+      //   }
+      //   if (date) {
+      //     this.filtredOrders = this.filtredOrders.filter(
+      //       i => date == i.takeDate.split(" ")[0]
+      //     );
+      //   }
+      // },
       search(val) {
-        this.filtredOrders = this.news.filter(i => {
+        this.filtredCouriers = this.couriers.filter(i => {
           return (
-            i.fromAddress.indexOf(val) + 1 ||
-            i.fromName.indexOf(val) + 1 ||
-            i.toAddress.indexOf(val) + 1 ||
-            i.toName.indexOf(val) + 1
+            i.name.indexOf(val) + 1
           );
         });
       }
     },
     async mounted() {
       await this.getCouriers();
-      this.filtredOrders = this.news;
+      //this.filtredOrders = this.news;
     }
   };
 </script>
