@@ -55,7 +55,6 @@
       },
       search(val) {
         this.filtredOrders = this.news.filter(i => {
-        console.log(i);
           return (
             i.fromAddress.indexOf(val) + 1 ||
             i.fromName.indexOf(val) + 1 ||

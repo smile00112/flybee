@@ -26,7 +26,8 @@ export default new Vuex.Store({
     setOrders(state, orders) { state.orders = orders; },
     setOrdersStatuses(state, statuses) { state.statuses = statuses; },    
     setNews(state, news) { state.news = news; },
-    setHistory(state, history) { state.history = history }
+    setHistory(state, history) { state.history = history },
+    setCouriers(state, couriers) { state.couriers = couriers }    
   },
   actions: {
     getDateNow({ commit }) {
@@ -63,20 +64,26 @@ export default new Vuex.Store({
         }
       } catch (error) { console.log(error) }
     },
-    async getCouriers() {
+    async getCouriers({ commit }) {
       try {
         const response = await axios.post(url + 'api/private/couriers')
         if (response.status == 200) {
           this.couriers = response.data
-
-          console.warn('couriers');
-          console.warn(this.couriers);
+          commit('setCouriers', response.data)
         }
       } catch (error) { console.log(error) }
     },
     async addCourier(_, { payload }) {
       try {
         const response = await axios.post(url + 'api/private/add-couriers', JSON.stringify({ ...payload }))
+        if (response.status == 200) {
+          await this.getCouriers()
+        }
+      } catch (error) { console.log(error) }
+    },
+    async EditCourier(_, { payload }) {
+      try {
+        const response = await axios.post(url + 'api/private/editcourier', JSON.stringify({ ...payload }))
         if (response.status == 200) {
           await this.getCouriers()
         }
