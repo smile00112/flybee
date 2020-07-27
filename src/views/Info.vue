@@ -168,7 +168,7 @@ export default {
     }
   }),
   methods: {
-    ...mapActions(["getAllOrders", "getOrderStatuses", "setStatus"]),
+    ...mapActions(["getAllOrders", "getOrderStatuses", "setStatus", "getCouriers"]),
     async inWork() {
       this.confirm.status = 2;
       await this.setStatus({ payload: this.confirm });
@@ -189,7 +189,8 @@ export default {
     await this.getAllOrders();
     this.order = this.orders.filter(i => i.orderId == this.$route.params.id)[0];
     this.confirm.orderId = this.order.orderId;
-
+    await this.getCouriers();
+    
     await this.getOrderStatuses();  
     this.orderStatus = this.statuses.filter(i => i.delivery_id == this.$route.params.id)[0];
 

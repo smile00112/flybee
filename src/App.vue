@@ -23,6 +23,13 @@ export default {
 .nav-item {
   display: flex;
 }
+.nav-item-date {
+  padding: 0 20px;
+  display: inline-table;
+}
+.nav-item-date label{
+  padding: 0 10px;
+}
 .bs-height-img {
   max-height: 1000px;
 }

@@ -30,6 +30,15 @@
             >Курьеры</a>
             <!--Класс active должен применяться к активной ссылке-->
           </li>
+          <li class="nav-item">
+            <a
+              :class="{active: $route.path == '/reports'}"
+              class="nav-link bs-a-ul-zak"
+              href="/reports"
+              @click.prevent="$router.push('/reports')"
+            >Отчеты</a>
+            <!--Класс active должен применяться к активной ссылке-->
+          </li>        
         </ul>
       </div>
       <div style="margin-top: 70px;">
@@ -38,7 +47,7 @@
           <span>{{ date }}</span>
         </p>
         <!--При выдоре даты в фильтре меняется сегодняшняя дата-->
-        <ul class="nav justify-content-center">
+        <ul class="nav justify-content-center" v-if="$route.path != '/reports'">
           <li class="nav-item">
             <input v-model="search" class="bs-input-search-zak" type="text" placeholder="Поиск" />
             <input class="bs-button-search-zak" type="button" disabled />
@@ -51,6 +60,8 @@
             <order-filter v-if="filter" @close="filter = false" @apply="applyFilter" />
           </li>
         </ul>
+
+
       </div>
       <slot></slot>
     </div>
@@ -65,7 +76,7 @@ export default {
   components: { OrderFilter },
   data: () => ({
     filter: false,
-    search: ""
+    
   }),
   methods: {
     ...mapActions(["setFilterDate"]),
