@@ -2,9 +2,11 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import moment from 'moment'
 import axios from 'axios'
+import JsonExcel from 'vue-json-excel'
+
+Vue.component('downloadExcel', JsonExcel)
 
 Vue.use(Vuex)
-
 const url = process.env.VUE_APP_BASE_URL
 
 export default new Vuex.Store({
@@ -48,6 +50,7 @@ export default new Vuex.Store({
         }
       } catch (error) { console.log(error) }
     },
+      
     async getOrderStatuses({ commit }) {
       try {
         const response = await axios.post(url + 'api/private/getstatus')
@@ -69,6 +72,7 @@ export default new Vuex.Store({
         const response = await axios.post(url + 'api/private/couriers')
         if (response.status == 200) {
           this.couriers = response.data
+          //response.data.unshift([id=0, name='Нет'];
           commit('setCouriers', response.data)
         }
       } catch (error) { console.log(error) }
