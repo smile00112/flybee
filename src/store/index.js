@@ -21,7 +21,8 @@ export default new Vuex.Store({
       {id:1, name: 'Курьер 1' },
       {id:2, name: 'Курьер 2' }, 
       {id:3, name: 'Курьер 3' }
-    ]
+    ],
+    companyes: [],
   },
   mutations: {
     setDate(state, date) { state.date = date },
@@ -29,7 +30,8 @@ export default new Vuex.Store({
     setOrdersStatuses(state, statuses) { state.statuses = statuses; },    
     setNews(state, news) { state.news = news; },
     setHistory(state, history) { state.history = history },
-    setCouriers(state, couriers) { state.couriers = couriers }    
+    setCouriers(state, couriers) { state.couriers = couriers },
+    setCompanyes(state, companyes) { state.companyes = companyes }        
   },
   actions: {
     getDateNow({ commit }) {
@@ -77,6 +79,16 @@ export default new Vuex.Store({
         }
       } catch (error) { console.log(error) }
     },
+    async getCompanyes({ commit }) {
+      try {
+        const response = await axios.post(url + 'api/private/getcompanyes')
+        if (response.status == 200) {
+          //this.couriers = response.data
+          //response.data.unshift([id=0, name='Нет'];
+          commit('setCompanyes', response.data)
+        }
+      } catch (error) { console.log(error) }
+    },    
     async addCourier(_, { payload }) {
       try {
         const response = await axios.post(url + 'api/private/add-couriers', JSON.stringify({ ...payload }))

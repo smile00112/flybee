@@ -149,23 +149,23 @@ export default {
     }
   },
   data: () => ({
-    order: {},
-    datetime: {
-      date: "",
-      time: ""
-    },
-    confirm: {
-      orderId: null,
-      name: "",
-      date: "",
-      summ: "",
-      courier: "",
-      comment: "",
-      status: ""
-    },
-    actionButtons: {
-      show: true
-    }
+      order: {},
+      datetime: {
+        date: "",
+        time: ""
+      },
+      confirm: {
+        orderId: null,
+        name: "",
+        date: "",
+        summ: "",
+        courier: "",
+        comment: "",
+        status: ""
+      },
+      actionButtons: {
+        show: true
+      }
   }),
   methods: {
     ...mapActions(["getAllOrders", "getOrderStatuses", "setStatus", "getCouriers"]),

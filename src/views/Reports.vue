@@ -18,6 +18,17 @@
         </li>
 
         <li class="nav-item-date">
+          <label for="order-courier" class="bs-labe-zakaz">Котрагенты</label>
+
+          <select v-model="reportForm.contra" class="bs-input-zakaz" id="order-contra">
+            <option v-for="agent in contra" 
+            v-bind:key="agent.id" 
+            :value="agent.id"
+            >{{ agent.name }}</option> 
+          </select>
+        </li>
+
+        <li class="nav-item-date">
           <label for="order-courier" class="bs-labe-zakaz">Курьер</label>
 
           <select v-model="reportForm.courier" class="bs-input-zakaz" id="order-courier">
@@ -27,7 +38,7 @@
             >{{ courier.name }}</option> 
           </select>
         </li>
-        
+
         <li class="nav-item-date">
            <button @click="filterOrders"  type="button" class="bs-success-button">Поиск</button>
         </li>
@@ -41,6 +52,21 @@
 
 
       <div style="margin: 10% 0% 2% 0%;">
+
+
+      <download-excel v-if="json_data.length"
+          class   = "btn btn-default"
+          :data   = "json_data"
+          :fields = "json_fields"
+          worksheet = "Лист 1"
+          name    = "report.xls">
+      
+          <span class="link">Скачать в .xls</span>
+      
+      </download-excel>
+      <br><br>
+
+
 
       <div v-if="!orders_v.length">Нет данных</div>
 
@@ -56,16 +82,6 @@
       </div>
       </div>
 
-    <download-excel v-if="json_data.length"
-        class   = "btn btn-default"
-        :data   = "json_data"
-        :fields = "json_fields"
-        worksheet = "Лист 1"
-        name    = "report.xls">
-    
-        <span class="link">Скачать в .xls</span>
-    
-    </download-excel>
 
   </toolbar>
 </template>
@@ -78,7 +94,7 @@
 
   export default {
     components: { Toolbar },
-    computed: mapState(["couriers","history","statuses",]),
+    computed: mapState(["couriers","history","statuses","companyes"]),
     data: () => ({
         json_fields: {
             '№': 'number',
@@ -87,6 +103,7 @@
             'Адрес куда': 'toAddress',
             'Получатель': 'fromContactPerson',
             'Цена': 'summ',
+            'Итого': 'total',
         },
         json_data: [
           //  {
@@ -115,9 +132,6 @@
                 }
             ]
         ],
-
-
-
       filtredCouriers: [],
       newCourierForm:{
         show: false
@@ -126,12 +140,14 @@
         from: "",
         to: "",
         courier: "",
+        contra: ""
       },
       orders: [], 
       orders_v: [], 
+      contra: [],
     }),
     methods: {
-      ...mapActions(["getCouriers", "getAllOrders","getOrderStatuses"]),
+      ...mapActions(["getCouriers", "getAllOrders","getOrderStatuses", "getCompanyes"]),
       getImg(status) {
         let img;
         if (status == "1") img = "white.png";
@@ -160,6 +176,7 @@
           let courier = this.reportForm.courier ? ( i.courier_id == this.reportForm.courier ) : 1;
           let date_from = 0;
           let date_to = 0;
+          let contra = this.reportForm.contra ? ( i.companyId == this.reportForm.contra ) : 1;
           if( i.date && i.date != "undefined" ){ 
             date_from = (this.reportForm.from && i.date ) ? ( new Date( i.date.split(' ')[0] ) >= new Date( this.reportForm.from ) ) : 1;
             date_to = (this.reportForm.to && i.date) ? ( new Date( i.date.split(' ')[0] ) <= new Date( this.reportForm.to ) ) : 1;
@@ -167,8 +184,10 @@
 
 // console.warn(new Date( i.date ) );
 // console.log( courier,  this.reportForm.courier, date_from, date_to, i.date  );
+// console.log(i.orderId, i.toName);
+// console.log(courier, date_from, date_to, contra);
 
-          return (  courier && date_from && date_to );
+          return (  courier && date_from && date_to && contra);
 
         });
 
@@ -176,6 +195,8 @@
          
         console.error($res);
         let $rr = [];
+        let $total = 0;
+        //Формируем данные для exell
         $res.forEach(function(x, i) {
                $rr.push({
                   'number': i+1,
@@ -185,15 +206,17 @@
                   'fromContactPerson': x.fromContactPerson,
                   'summ': x.summ
                 });
+                $total+=x.summ*1;
         });
-        console.warn( 'rr' );
-        console.warn( $rr );
-        
-      this.json_data = $rr;
+        //Добавляем "Итого"
+        if($total)
+          $rr.push({
+              'total': $total+' руб.'
+          });
 
+        this.json_data = $rr;
         this.orders_v = $res;
         this.sortReports(this.orders_v);
-              
 
       },
       sortReports($r){
@@ -212,17 +235,36 @@
       await this.getCouriers();
       await this.getAllOrders();
       await this.getOrderStatuses();  //  this.orderStatus = this.statuses.filter(i => i.delivery_id == this.$route.params.id)[0];
+      await this.getCompanyes();
 
       //Объединяем заказы и статусы
       this.orders = this.history.map(x => Object.assign(x, this.statuses.find(y => y.delivery_id == x.orderId)));
       this.orders_v = this.orders;
       this.sortReports(this.orders_v);
 
-      // console.log( 'res' );
-      // console.log( this.orders );
-      //this.filtredOrders = this.history;
-      // this.filtredCouriers = this.couriers;
-    }
+      // let с = this.contra;
+      // let tmp = [];
+
+      //Формируем данные контрагентов
+      // this.history.forEach(function(x) {
+      //   if(tmp.indexOf(x.toName) == -1){    //фильтруем дубли   
+      //         с.push({'name': x.toName}); //.replace(/&quot;/gi, '"')
+      //         tmp.push( x.toName );
+      //     }
+      // });
+
+      this.contra = this.companyes;
+      // console.log('this.contra')
+      // console.log(this.contra)
+
+      //Сортируем контрагентов по алфавиту
+      // this.contra.sort(function(obj1, obj2) {
+      //   if (obj1.name < obj2.name) return -1;
+      //   if (obj1.name > obj2.name) return 1;
+      //   return 0;
+      // });
+
+}
   };
 </script>
 

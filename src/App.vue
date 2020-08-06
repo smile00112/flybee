@@ -20,6 +20,11 @@ export default {
 </script>
 
 <style>
+.link{
+    color: red;
+    text-decoration: underline;
+    font-size: larger;
+}
 .nav-item {
   display: flex;
 }
