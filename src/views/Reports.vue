@@ -98,10 +98,11 @@
     data: () => ({
         json_fields: {
             '№': 'number',
+            'API №': 'orderId',
             'Дата': 'date',
             'Адрес откуда': 'fromAddress',
             'Адрес куда': 'toAddress',
-            'Получатель': 'fromContactPerson',
+            'Получатель': 'toContactPerson',
             'Цена': 'summ',
             'Итого': 'total',
         },
@@ -160,18 +161,12 @@
         return `/info/${orderId}`;
       },
       filterOrders() {
-        // console.log(this.reportForm);
-        // console.log(this.history); 
-        // console.warn(this.statuses);    
-        // console.warn(this.couriers);   
-
        
         //Фильтруем
         let $res =  this.orders.filter(i => {
 
-         // let courier_name = i.courier_id ? this.couriers.find(cc => cc.id == i.courier_id) : '';
+        // let courier_name = i.courier_id ? this.couriers.find(cc => cc.id == i.courier_id) : '';
         //  if( courier_name !== undefined ) courier_name = courier_name.name;
-
 
           let courier = this.reportForm.courier ? ( i.courier_id == this.reportForm.courier ) : 1;
           let date_from = 0;
@@ -181,11 +176,6 @@
             date_from = (this.reportForm.from && i.date ) ? ( new Date( i.date.split(' ')[0] ) >= new Date( this.reportForm.from ) ) : 1;
             date_to = (this.reportForm.to && i.date) ? ( new Date( i.date.split(' ')[0] ) <= new Date( this.reportForm.to ) ) : 1;
           }
-
-// console.warn(new Date( i.date ) );
-// console.log( courier,  this.reportForm.courier, date_from, date_to, i.date  );
-// console.log(i.orderId, i.toName);
-// console.log(courier, date_from, date_to, contra);
 
           return (  courier && date_from && date_to && contra);
 
@@ -200,10 +190,11 @@
         $res.forEach(function(x, i) {
                $rr.push({
                   'number': i+1,
+                  'orderId': x.orderId,
                   'date': x.date,
                   'fromAddress': x.fromAddress,
                   'toAddress': x.toAddress,
-                  'fromContactPerson': x.fromContactPerson,
+                  'toContactPerson': x.name,
                   'summ': x.summ
                 });
                 $total+=x.summ*1;
@@ -241,32 +232,9 @@
       this.orders = this.history.map(x => Object.assign(x, this.statuses.find(y => y.delivery_id == x.orderId)));
       this.orders_v = this.orders;
       this.sortReports(this.orders_v);
-
-      // let с = this.contra;
-      // let tmp = [];
-
-      //Формируем данные контрагентов
-      // this.history.forEach(function(x) {
-      //   if(tmp.indexOf(x.toName) == -1){    //фильтруем дубли   
-      //         с.push({'name': x.toName}); //.replace(/&quot;/gi, '"')
-      //         tmp.push( x.toName );
-      //     }
-      // });
-
       this.contra = this.companyes;
-      // console.log('this.contra')
-      // console.log(this.contra)
 
-      //Сортируем контрагентов по алфавиту
-      // this.contra.sort(function(obj1, obj2) {
-      //   if (obj1.name < obj2.name) return -1;
-      //   if (obj1.name > obj2.name) return 1;
-      //   return 0;
-      // });
 
 }
   };
 </script>
-
-<style>
-</style>
