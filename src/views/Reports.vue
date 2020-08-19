@@ -103,6 +103,7 @@
             'Адрес куда': 'toAddress',
             'Получатель': 'fromContactPerson',
             'Цена': 'summ',
+            'Комментарий': 'comment', 
             'Итого': 'total',
         },
         json_data: [
@@ -204,7 +205,8 @@
                   'fromAddress': x.fromAddress,
                   'toAddress': x.toAddress,
                   'fromContactPerson': x.fromContactPerson,
-                  'summ': x.summ
+                  'summ': x.summ,
+                  'comment': x.comment
                 });
                 $total+=x.summ*1;
         });
