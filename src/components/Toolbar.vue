@@ -76,7 +76,7 @@ export default {
   components: { OrderFilter },
   data: () => ({
     filter: false,
-    
+    search: '',
   }),
   methods: {
     ...mapActions(["setFilterDate"]),

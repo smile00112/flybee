@@ -62,6 +62,15 @@
             i.toName.indexOf(val) + 1 ||
             i.orderId.indexOf(val) + 1 
           );
+        }).sort( function(a, b){ //сортировка по статусам
+            if (a.status < b.status) {
+              return -1;
+            }
+            if (a.status > b.status) {
+              return 1;
+            }
+        
+            return 0;
         });
       }
     },

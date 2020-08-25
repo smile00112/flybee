@@ -54,14 +54,23 @@ export default {
       }
     },
     search(val) {
-      this.filtredOrders = this.news.filter(i => {
+      this.filtredOrders = this.history.filter(i => {
         return (
           i.fromAddress.indexOf(val) + 1 ||
           i.fromName.indexOf(val) + 1 ||
           i.toAddress.indexOf(val) + 1 ||
-          i.toName.indexOf(val) + 1
+          i.toName.indexOf(val) + 1 ||
+          i.orderId.indexOf(val) + 1 
         );
-      });
+      }).sort( function(a, b){ //сортировка по статусам
+            if (a.status < b.status) {
+              return -1;
+            }
+            if (a.status > b.status) {
+              return 1;
+            }
+            return 0;
+        });
     }
   },
   async mounted() {
