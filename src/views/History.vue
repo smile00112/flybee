@@ -8,7 +8,7 @@
         <div style="display: flex; margin-bottom: 2%">
           <div class="bs-nomer-zak">
             <a :href="getLink(order.orderId)" @click.prevent="$router.push(getLink(order.orderId))">
-              <p class="bs-p-zak">№ {{ order.orderId }}</p>
+              <p class="bs-p-zak">№ {{ order.orderId }} ({{ order.takeDate | formatDate }})</p>
             </a>
           </div>
           <img class="bs-left-zak" :src="getImg(order.status)" />
@@ -28,6 +28,9 @@ export default {
   data: () => ({
     filtredOrders: []
   }),
+  filters: {
+    formatDate: d => d.toLocaleString('ru-RU').replace(',', '').slice(0, -3).split(' ')[0],
+  },
   methods: {
     ...mapActions(["getAllOrders"]),
     getImg(status) {
